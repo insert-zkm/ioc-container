@@ -7,6 +7,7 @@
 #include <typeindex>
 #include <type_traits>
 #include <cassert>
+#include <vector>
 
 namespace ioc {
 
@@ -45,15 +46,30 @@ protected:
         this->_factories[typeid(Base)] = std::make_shared<CFactory<Base>>(factory_func);
     }
 
+    template<typename T>
+    bool contains() const {
+        return (this->_factories.find(typeid(T)) != this->_factories.cend());
+    }
+
+    template<typename ...TArgs>
+    bool isArgsContain() const {
+        std::vector<bool> chk = {contains<TArgs>()...};
+
+        for (bool c : chk) {
+            if (!c) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 public:
     template<typename Base>
     std::shared_ptr<Base> resolve() const {
         std::type_index key = typeid(Base);
 
         FactoryMap::const_iterator factory = this->_factories.find(key);
-        if(factory == this->_factories.cend()) {
-            return nullptr;
-        }
+        assert(( factory != this->_factories.cend() ));
 
         std::shared_ptr<CFactory<Base>> factory_func = std::static_pointer_cast<CFactory<Base>>(factory->second);
 
@@ -62,14 +78,14 @@ public:
 
 
 
-    template<typename Base, typename Derived, typename ...TArgs>
+    template<typename Base, typename Derived, typename ...Injections>
     void registerInstance() {
-        assert(
-            (this->isInstanceOf<Base, Derived>())
-        );
+        assert(( this->isInstanceOf<Base, Derived>() && "Container::registerInstance<Base, Derived, ...Injections>() Derived is not instance of Base" ));
+
+        assert(( this->isArgsContain<Injections...>() && "Container::registerInstance<Base, Derived, ...Injections>() Injections is not in Container" ));
 
         std::function<std::shared_ptr<Base>()> factory_func = [this] () {
-            return std::make_shared<Derived>(this->resolve<TArgs>()...);
+            return std::make_shared<Derived>(this->resolve<Injections>()...);
         };
 
         registerFactory<Base>(factory_func);
