@@ -79,19 +79,19 @@ void demo2()
     ioc::Container injector;
 
     // Регистрируем IHello с классом Hello, т.о. каждый раз запрашивая IHell получаем объект Hello.
-    injector.RegisterInstance<IHello, Hello>();
+    injector.registerInstance<IHello, Hello>();
     auto helloInstance = injector.GetObject<IHello>();
     helloInstance->hello();
-    injector.RegisterInstance<IHello, Privet>();
+    injector.registerInstance<IHello, Privet>();
 
     //Здесь, после регистрации получим объект Privet
     helloInstance = injector.GetObject<IHello>();
     helloInstance->hello();
 
     //------Example #2----------------
-
-    gContainer.RegisterInstance<IAmAThing, TheThing>();
-    gContainer.RegisterFactory<IAmTheOtherThing, TheOtherThing, IAmAThing>();
+    
+    gContainer.registerInstance<IAmAThing, TheThing>();
+    gContainer.registerFactory<IAmTheOtherThing, TheOtherThing, IAmAThing>();
 
     gContainer.GetObject<IAmAThing>()->TestThis();
     gContainer.GetObject<IAmTheOtherThing>()->TheOtherTest();

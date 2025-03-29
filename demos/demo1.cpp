@@ -1,6 +1,9 @@
 #include <memory>
+#include <iostream>
 
-#include "ioc_container.h"
+//#include "ioc_container.h"
+#include "ioc_copy.hpp"
+using namespace std;
 
 class IWriter {
 public:
@@ -10,6 +13,9 @@ public:
 class Writer : public IWriter{
 public:
     Writer() = default;
+    Writer(Writer& ) {
+        std::cout << "COPY\n";
+    }
     virtual string write() {
         return "write";
     }
@@ -38,6 +44,9 @@ class Printer : public IPrinter {
 public:
     std::shared_ptr<IFoo> foo;
     Printer(std::shared_ptr<IFoo> foo) : foo(foo) {};
+    Printer(Printer& ) {
+        std::cout << "COPY\n";
+    }
 
     virtual string print() {
         return "print(" + foo->foo() + ")";
@@ -53,6 +62,9 @@ public:
     std::shared_ptr<IWriter> w;
     std::shared_ptr<IPrinter> p;
     Console(std::shared_ptr<IWriter> w, std::shared_ptr<IPrinter> p) : w(w), p(p) {};
+    Console(Console& ) {
+        std::cout << "COPY\n";
+    }
     virtual string log() {
         return "console(" + w->write() + ", " + p->print() + ")";
     }
@@ -60,15 +72,15 @@ public:
 
 
 void demo1() { // IConsole* c = new Console(new Writer(), new Printer(new Foo()))
-    ioc::Container container;
+    ioc_copy::Container container;
 
     // configure
-    container.RegisterInstance<IWriter, Writer>();
-    container.RegisterInstance<IFoo, Foo>();
-    container.RegisterInstance<IPrinter, Printer, IFoo>();
-    container.RegisterInstance<IConsole, Console, IWriter, IPrinter>();
+    container.registerInstance<IWriter, Writer>();
+    container.registerInstance<IFoo, Foo>();
+    container.registerInstance<IPrinter, Printer, IFoo>();
+    container.registerInstance<IConsole, Console, IWriter, IPrinter>();
 
     // re/use
-    std::shared_ptr<IConsole> c = container.GetObject<IConsole>();
+    std::shared_ptr<IConsole> c = container.resolve<IConsole>();
     std::cout << c->log();
 }

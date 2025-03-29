@@ -1,5 +1,4 @@
 #include <iostream>
-#include <QDebug>
 
 #include "demos/demo1.cpp"
 #include "demos/demo2.cpp"
