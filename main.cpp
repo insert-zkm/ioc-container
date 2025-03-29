@@ -1,13 +1,11 @@
 #include <iostream>
 
-#include "demos/demo1.cpp"
-#include "demos/demo2.cpp"
-
+#include "test/test.hpp"
 using namespace std;
 
 int main()
 {
-    demo1();
-    demo2();
+    test();
+
 	return 0;
 }

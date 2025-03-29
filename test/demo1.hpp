@@ -1,9 +1,12 @@
 #include <memory>
 #include <iostream>
 
-#include "ioc_container.hpp"
-
 using namespace std;
+
+class IFoo;
+class IWriter;
+class IPrinter;
+
 
 class IWriter {
 public:
@@ -71,16 +74,13 @@ public:
 };
 
 
-void demo1() { // IConsole* c = new Console(new Writer(), new Printer(new Foo()))
-    ioc::Container container;
+class HandWriter : public IWriter {
+    shared_ptr<IFoo> f;
+public:
+    HandWriter(shared_ptr<IFoo> f) : f(f) {}
+    virtual string write() {
+        return "handwrite(" + f->foo() + ")";
+    }
+};
 
-    // configure
-    container.registerInstance<IWriter, Writer>();
-    container.registerInstance<IFoo, Foo>();
-    container.registerInstance<IPrinter, Printer, IFoo>();
-    container.registerInstance<IConsole, Console, IWriter, IPrinter>();
 
-    // re/use
-    std::shared_ptr<IConsole> c = container.resolve<IConsole>();
-    std::cout << c->log();
-}
