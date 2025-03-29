@@ -55,3 +55,9 @@ c->log("di");
 - [ ] If `GetObject` is not find instance app crushing
 - [ ] Cannot construct object with non inject arguments
 
+
+https://en.cppreference.com/w/cpp/memory/shared_ptr/pointer_cast
+https://en.cppreference.com/w/cpp/types/type_index
+https://en.cppreference.com/w/cpp/language/pack
+https://en.cppreference.com/w/cpp/utility/functional/function
+
