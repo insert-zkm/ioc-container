@@ -1,3 +1,6 @@
+#ifndef IOC_CONTAINER
+#define IOC_CONTAINER
+
 #include <functional>
 #include <map>
 #include <memory>
@@ -5,7 +8,7 @@
 #include <type_traits>
 #include <cassert>
 
-namespace ioc_copy {
+namespace ioc {
 
 class Container {
 protected:
@@ -76,6 +79,9 @@ protected:
     FactoryMap _factories;
 };
 }
+
+#endif // IOC_CONTAINER
+
 /*
 map {
     {
@@ -104,6 +110,5 @@ map {
     }
 }
 */
-
 
 

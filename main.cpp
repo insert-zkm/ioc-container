@@ -8,5 +8,6 @@ using namespace std;
 int main()
 {
     demo1();
+    demo2();
 	return 0;
 }

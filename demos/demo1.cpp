@@ -1,8 +1,8 @@
 #include <memory>
 #include <iostream>
 
-//#include "ioc_container.h"
-#include "ioc_copy.hpp"
+#include "ioc_container.hpp"
+
 using namespace std;
 
 class IWriter {
@@ -72,7 +72,7 @@ public:
 
 
 void demo1() { // IConsole* c = new Console(new Writer(), new Printer(new Foo()))
-    ioc_copy::Container container;
+    ioc::Container container;
 
     // configure
     container.registerInstance<IWriter, Writer>();

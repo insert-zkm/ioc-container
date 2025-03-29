@@ -2,7 +2,8 @@
 #include <iostream>
 #include <string>
 
-#include "ioc_container.h"
+#include "ioc_container.hpp"
+using namespace std;
 
 class IAmAThing
 {
@@ -80,23 +81,23 @@ void demo2()
 
     // Регистрируем IHello с классом Hello, т.о. каждый раз запрашивая IHell получаем объект Hello.
     injector.registerInstance<IHello, Hello>();
-    auto helloInstance = injector.GetObject<IHello>();
+    auto helloInstance = injector.resolve<IHello>();
     helloInstance->hello();
     injector.registerInstance<IHello, Privet>();
 
     //Здесь, после регистрации получим объект Privet
-    helloInstance = injector.GetObject<IHello>();
+    helloInstance = injector.resolve<IHello>();
     helloInstance->hello();
 
     //------Example #2----------------
     
     gContainer.registerInstance<IAmAThing, TheThing>();
-    gContainer.registerFactory<IAmTheOtherThing, TheOtherThing, IAmAThing>();
+    gContainer.registerInstance<IAmTheOtherThing, TheOtherThing, IAmAThing>();
 
-    gContainer.GetObject<IAmAThing>()->TestThis();
-    gContainer.GetObject<IAmTheOtherThing>()->TheOtherTest();
+    gContainer.resolve<IAmAThing>()->TestThis();
+    gContainer.resolve<IAmTheOtherThing>()->TheOtherTest();
 
     //Опять запршиваем объект,после последней регистрации получим объект Privet
-    helloInstance = injector.GetObject<IHello>();
+    helloInstance = injector.resolve<IHello>();
     helloInstance->hello();
 }

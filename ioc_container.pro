@@ -3,8 +3,7 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
-HEADERS += ioc_container.h \
-    ioc_copy.hpp
+HEADERS += ioc_container.hpp
 
 SOURCES += main.cpp \
     demos/demo1.cpp \
