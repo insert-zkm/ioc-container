@@ -34,7 +34,7 @@ void test2() {
 }
 
 void test() {
-//    test1();
-    test2();
+    test1();
+//    test2();
 }
 

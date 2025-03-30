@@ -7,7 +7,6 @@
 #include <typeindex>
 #include <type_traits>
 #include <cassert>
-#include <vector>
 
 namespace ioc {
 
@@ -53,10 +52,11 @@ protected:
 
     template<typename ...TArgs>
     bool isArgsContain() const {
-        std::vector<bool> chk = {contains<TArgs>()...};
+        const int size = sizeof...(TArgs);
+        bool chk[size] = {contains<TArgs>()...};
 
-        for (bool c : chk) {
-            if (!c) {
+        for(int i = 0; i < size; i++) {
+            if (!chk[i]) {
                 return false;
             }
         }
