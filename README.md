@@ -54,6 +54,27 @@ c->log("di");
 # Problems
 - [ ] If `GetObject` is not find instance app crushing
 - [ ] Cannot construct object with non inject arguments
+- [ ] Circular dependencies (deadlock)
+    ```c++
+    class Foo : public IFoo {
+        Foo(IBar* IBar) { ... }
+    };
+    class Bar : public IBar {
+        Bar(IFoo* IFoo) { ... }
+    };
+    ```
+
+    Cons of constructor injections method. We cannot create `Foo` w/o `Bar` and `Bar` w/o `Foo`. In `Container::registerInstance` we need to **prevent** this type of dependencies.
+
+    But if we'd like to solve this need to use setter injections method.
+    ```c++
+    class Foo : public IFoo {
+        void setBar(Bar* Bar) { ... }
+    };
+    class Bar : public Bar {
+        void setFoo(IFoo* IFoo) { ... }
+    };
+    ```
 
 
 https://en.cppreference.com/w/cpp/memory/shared_ptr/pointer_cast
