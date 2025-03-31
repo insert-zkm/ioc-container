@@ -8,7 +8,7 @@ IoC/DI have three type of containers.
     - setter injection
     - interface injection
 
-We are gonna implement constructor injection container.
+We are gonna implement **constructor** injection container.
 
 
 ```c++
