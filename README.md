@@ -52,9 +52,9 @@ c->log("di");
 ```
 
 # Problems
-- [ ] If `GetObject` is not find instance app crushing
-- [ ] Cannot construct object with non inject arguments
-- [ ] Circular dependencies (deadlock)
+- [x] If `GetObject` is not find instance app crushing
+- [x] Cannot construct object with non inject arguments
+- [x] Circular dependencies (deadlock)
     ```c++
     class Foo : public IFoo {
         Foo(IBar* IBar) { ... }
@@ -78,7 +78,10 @@ c->log("di");
 
 
 https://en.cppreference.com/w/cpp/memory/shared_ptr/pointer_cast
+
 https://en.cppreference.com/w/cpp/types/type_index
+
 https://en.cppreference.com/w/cpp/language/pack
+
 https://en.cppreference.com/w/cpp/utility/functional/function
 
