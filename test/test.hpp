@@ -17,15 +17,15 @@ void test1() {
     std::shared_ptr<IWriter> w = container.resolve<IWriter>();      // IWriter* w = new Writer()
 
 
-    assert(( f->foo() == "foo" ));
-    assert(( w->write() == "write" ));
-    assert(( p->print() == "print(foo)" ));
-    assert(( c->log() == "console(write, print(foo))" ));
+    assert(( f->foo() == "foo()" ));
+    assert(( w->write() == "write()" ));
+    assert(( p->print() == "print(foo())" ));
+    assert(( c->log() == "console(write(), print(foo()))" ));
 
     container.registerInstance<IWriter, HandWriter, IFoo>();
     std::shared_ptr<IWriter> hw = container.resolve<IWriter>();     // IWriter* w = new HandWriter(new IFoo())
 
-    assert(( hw->write() == "handwrite(foo)" ));
+    assert(( hw->write() == "handwrite(foo())" ));
 }
 
 void test2() {
@@ -33,8 +33,31 @@ void test2() {
     container.registerInstance<IPrinter, Printer, IFoo>();
 }
 
+void test3() {
+    ioc::Container container;
+
+    // configure
+    container.registerInstance<IAmAThing, TheThing>();
+    container.registerInstance<IAmTheOtherThing>(
+        make_shared<TheOtherThing>(container.resolve<IAmAThing>(), "hello")
+    );
+
+    // use
+    std::shared_ptr<IAmTheOtherThing> iatot = container.resolve<IAmTheOtherThing>();
+    assert(( iatot->TheOtherTest()== "TheOtherThing(TheThing(), 'hello')" ));
+
+    // reconfigure
+    container.registerInstance<IAmTheOtherThing, TheOtherThing, IAmAThing>();
+
+    // use
+    std::shared_ptr<IAmTheOtherThing> iatot2 = container.resolve<IAmTheOtherThing>();
+    assert(( iatot2->TheOtherTest() == "TheOtherThing(TheThing())" ));
+
+}
+
 void test() {
     test1();
 //    test2();
+    test3();
 }
 

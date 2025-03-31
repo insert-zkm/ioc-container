@@ -20,7 +20,7 @@ public:
         std::cout << "COPY\n";
     }
     virtual string write() {
-        return "write";
+        return "write()";
     }
 };
 
@@ -35,7 +35,7 @@ public:
         std::cout << "COPY\n";
     }
     virtual string foo() {
-        return "foo";
+        return "foo()";
     }
 };
 

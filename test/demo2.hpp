@@ -9,22 +9,22 @@ class IAmAThing
 {
 public:
     virtual ~IAmAThing() {}
-    virtual void TestThis() = 0;
+    virtual string TestThis() = 0;
 };
 
 class IAmTheOtherThing
 {
 public:
     virtual ~IAmTheOtherThing() {}
-    virtual void TheOtherTest() = 0;
+    virtual string TheOtherTest() = 0;
 };
 
 class TheThing : public IAmAThing
 {
 public:
     TheThing() {}
-    void TestThis() {
-        std::cout << "A Thing" << std::endl;
+    string TestThis() {
+        return "TheThing()";
     }
 };
 
@@ -36,16 +36,15 @@ class TheOtherThing : public IAmTheOtherThing
 public:
     TheOtherThing(std::shared_ptr<IAmAThing> thing)
         : m_thing(thing) {
-        m_superInfo = "From TheOtherThing";
+        m_superInfo = thing->TestThis();
     }
     TheOtherThing(std::shared_ptr<IAmAThing> thing, string sInfo)
         : m_thing(thing)
         , m_superInfo(sInfo) {
-        m_superInfo = sInfo;
+        m_superInfo = thing->TestThis() + ", '" + sInfo + "'";
     }
-    void TheOtherTest() {
-        std::cout << m_superInfo << std::endl;
-        m_thing->TestThis();
+    string TheOtherTest() {
+        return "TheOtherThing(" + m_superInfo + ")";
     }
 };
 
