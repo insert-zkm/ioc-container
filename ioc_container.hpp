@@ -91,6 +91,15 @@ public:
         registerFactory<Base>(factory_func);
     }
 
+    template<typename T>
+    void registerInstance(std::shared_ptr<T> factory_return_value) {
+        std::function<std::shared_ptr<T>()> factory_func = [=] () {
+            return factory_return_value;
+        };
+
+        registerFactory<T>(factory_func);
+    }
+
 protected:
     FactoryMap _factories;
 };
