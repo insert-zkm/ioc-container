@@ -1,5 +1,6 @@
 #include "demo1.hpp"
 #include "demo2.hpp"
+#include "demo3.hpp"
 
 void test1() {
     ioc::Container container;
@@ -55,9 +56,29 @@ void test3() {
 
 }
 
+void test4() {
+    ioc::Container container;
+
+    // configure
+    string version = "12.2";
+    ProcessorType type = ProcessorType::x64;
+    double speed = 334.234242;
+    int tdp_whatt = 500;
+    container.registerInstance<IProcessor>(
+        make_shared<AMDProcessor>(version, type, speed, tdp_whatt)
+    );
+
+    // use
+    shared_ptr<IProcessor> p = container.resolve<IProcessor>();
+
+    Computer cmp(p);
+    std::cout << cmp.getProcessor()->getProcessorInfo() << std::endl;
+}
+
 void test() {
     test1();
 //    test2();
     test3();
+    test4();
 }
 
