@@ -56,7 +56,7 @@ void test3() {
 
 }
 
-void test4() {
+void test44() {
     ioc::Container container;
 
     // configure
@@ -75,6 +75,25 @@ void test4() {
     std::cout << cmp.getProcessor()->getProcessorInfo() << std::endl;
 }
 
+void test4() {
+    string version = "12.2";
+    ProcessorType type = ProcessorType::x64;
+    double speed = 334.234242;
+    int tdp_whatt = 500;
+
+    ioc::Container container;
+
+    // configure
+    container.registerInstance<IProcessor>(
+        make_shared<AMDProcessor>(version, type, speed, tdp_whatt)
+        );
+    container.registerInstance<IComputer, Computer, IProcessor>();
+
+    // use
+    shared_ptr<IComputer> cmp = container.resolve<IComputer>();
+
+    std::cout << cmp->getProcessor()->getProcessorInfo() << std::endl;
+}
 void test() {
     test1();
 //    test2();

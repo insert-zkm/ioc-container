@@ -77,12 +77,17 @@ public:
 };
 
 
-class Computer {
+class IComputer {
+public:
+    virtual shared_ptr<IProcessor> getProcessor() const = 0;
+};
+
+class Computer : public IComputer {
     shared_ptr<IProcessor> _processor;
 public:
     Computer(shared_ptr<IProcessor> processor) : _processor(processor) {}
 
-    shared_ptr<IProcessor> getProcessor()
+    shared_ptr<IProcessor> getProcessor() const override
     {
         return _processor;
     }
