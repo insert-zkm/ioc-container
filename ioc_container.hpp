@@ -38,13 +38,6 @@ protected:
         return std::is_base_of<Base, Derived>::value;
     }
 
-    template<typename Base>
-    void registerFactory(
-        std::function<std::shared_ptr<Base>()> factory_func
-    ) {
-        this->_factories[typeid(Base)] = std::make_shared<CFactory<Base>>(factory_func);
-    }
-
     template<typename T>
     bool contains() const {
         return (this->_factories.find(typeid(T)) != this->_factories.cend());
@@ -76,29 +69,44 @@ public:
         return factory_func->getObject();
     }
 
+    template<typename Base>
+    void registerFunctor(
+        std::function<std::shared_ptr<Base>()> factory_func
+        ) {
+        this->_factories[typeid(Base)] = std::make_shared<CFactory<Base>>(factory_func);
+    }
 
+    template<typename Base, typename Derived, typename ...Injections>
+    void registerFactory() {
+        assert(( this->isInstanceOf<Base, Derived>() && "Container::registerFactory<Base, Derived, ...Injections>() Derived is not instance of Base" ));
+        assert(( this->isArgsContain<Injections...>() && "Container::registerFactory<Base, Derived, ...Injections>() Injections is not in Container" ));
+
+        std::function<std::shared_ptr<Base>()> factory_func = [=] () {
+            return std::make_shared<Derived>(this->resolve<Injections>...);
+        };
+
+        registerFunctor<Base>(factory_func);
+    }
+
+    template<typename T>
+    void registerInstance(std::shared_ptr<T> instance) {
+        std::function<std::shared_ptr<T>()> factory_func = [=] () {
+            return instance;
+        };
+
+        registerFunctor<T>(factory_func);
+    }
 
     template<typename Base, typename Derived, typename ...Injections>
     void registerInstance() {
         assert(( this->isInstanceOf<Base, Derived>() && "Container::registerInstance<Base, Derived, ...Injections>() Derived is not instance of Base" ));
-
         assert(( this->isArgsContain<Injections...>() && "Container::registerInstance<Base, Derived, ...Injections>() Injections is not in Container" ));
 
-        std::function<std::shared_ptr<Base>()> factory_func = [this] () {
-            return std::make_shared<Derived>(this->resolve<Injections>()...);
-        };
-
-        registerFactory<Base>(factory_func);
+        std::shared_ptr<Base> instance = std::make_shared<Derived>(this->resolve<Injections>()...);
+        registerInstance<Base>(instance);
     }
 
-    template<typename T>
-    void registerInstance(std::shared_ptr<T> factory_return_value) {
-        std::function<std::shared_ptr<T>()> factory_func = [=] () {
-            return factory_return_value;
-        };
 
-        registerFactory<T>(factory_func);
-    }
 
 protected:
     FactoryMap _factories;
@@ -106,34 +114,5 @@ protected:
 }
 
 #endif // IOC_CONTAINER
-
-/*
-map {
-    {
-        IFoo,
-        (): IFoo* {
-            return new Foo();
-        }
-    },
-    {
-        IWriter,
-        (): IWriter* {
-            return new Writer();
-        }
-    },
-    {
-        IPrinter,
-        (): IPrinter* {
-            return new Printer(resolve<IFoo>);
-        }
-    },
-    {
-        IConsole,
-        (): IConsole* {
-            return new Console(resolve<IWriter>, resolve<IPrinter>)
-        }
-    }
-}
-*/
 
 
