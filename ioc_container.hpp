@@ -82,7 +82,7 @@ public:
         assert(( this->isArgsContain<Injections...>() && "Container::registerFactory<Base, Derived, ...Injections>() Injections is not in Container" ));
 
         std::function<std::shared_ptr<Base>()> factory_func = [=] () {
-            return std::make_shared<Derived>(this->resolve<Injections>...);
+            return std::make_shared<Derived>(this->resolve<Injections>()...);
         };
 
         registerFunctor<Base>(factory_func);
